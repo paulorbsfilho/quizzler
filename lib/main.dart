@@ -31,6 +31,7 @@ QuizBrain quizBrain = QuizBrain();
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeeper = [];
+  String lastPercent;
 
   void checkAnswer(Answer userPickedAnswer) {
     Answer correctAnswer = quizBrain.getCorrectAnswer();
@@ -39,19 +40,21 @@ class _QuizPageState extends State<QuizPage> {
       if (quizBrain.isFinished() == false) {
         // ignore: unrelated_type_equality_checks
         if (userPickedAnswer == correctAnswer) {
-          scoreKeeper.add(Icon(Icons.check,color: Colors.green,));
+          scoreKeeper.add(Icon(Icons.check, color: Colors.green,));
           quizBrain.countHit();
         } else {
-          scoreKeeper.add(Icon(Icons.close,color: Colors.red,));
+          scoreKeeper.add(Icon(Icons.close, color: Colors.red,));
         }
+        lastPercent = quizBrain.getPercent();
         quizBrain.nextQuestion();
       } else {
-        if(quizBrain.gotAllTheQuestionsRight()){
+        if (quizBrain.gotAllTheQuestionsRight()) {
           _showMyDialogWin(context);
-        }else{
+        } else {
           _showMyDialog(context);
         }
         scoreKeeper = [];
+        quizBrain.reset();
       }
     });
   }
@@ -67,11 +70,11 @@ class _QuizPageState extends State<QuizPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Hits '+quizBrain.getPercent()+'%',
+              'Hits ' + quizBrain.getPercent() + '%',
               textAlign: TextAlign.center,
               style: TextStyle(
-              fontSize: 25.0,
-              color: Colors.white,
+                fontSize: 25.0,
+                color: Colors.white,
               ),
             ),
           ],
@@ -156,7 +159,7 @@ class _QuizPageState extends State<QuizPage> {
       ],
     );
   }
-}
+
 
 Future<void> _showMyDialogWin(BuildContext context) async {
   return showDialog<void>(
@@ -178,7 +181,6 @@ Future<void> _showMyDialogWin(BuildContext context) async {
             child: Text('Ok'),
             onPressed: () {
               Navigator.of(context).pop();
-              quizBrain.reset();
             },
           ),
         ],
@@ -198,7 +200,7 @@ Future<void> _showMyDialog(BuildContext context) async {
           child: ListBody(
             children: <Widget>[
               Text('Your hits percent is:'),
-              Text(quizBrain.getPercent()),
+              Text(lastPercent),
             ],
           ),
         ),
@@ -207,7 +209,7 @@ Future<void> _showMyDialog(BuildContext context) async {
             child: Text('Ok'),
             onPressed: () {
               Navigator.of(context).pop();
-              quizBrain.reset();
+              lastPercent = '';
             },
           ),
         ],
@@ -221,3 +223,4 @@ question1: 'You can lead a cow down stairs but not up stairs.', false,
 question2: 'Approximately one quarter of human bones are in the feet.', true,
 question3: 'A slug\'s blood is green.', true,
 */
+}
