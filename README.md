@@ -1,6 +1,6 @@
 # quizzler
 
-Jogo de perguntas.
+A simple flutter game of questions and answers.
 
 ## Getting Started
 
