@@ -45,11 +45,13 @@ class _QuizPageState extends State<QuizPage> {
           scoreKeeper.add(Icon(Icons.close,color: Colors.red,));
         }
         quizBrain.nextQuestion();
-
       } else {
-        _showMyDialog(context);
+        if(quizBrain.gotAllTheQuestionsRight()){
+          _showMyDialogWin(context);
+        }else{
+          _showMyDialog(context);
+        }
         scoreKeeper = [];
-        quizBrain.reset();
       }
     });
   }
@@ -156,6 +158,35 @@ class _QuizPageState extends State<QuizPage> {
   }
 }
 
+Future<void> _showMyDialogWin(BuildContext context) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('End game!'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text('You got all the answers right!'),
+              Text('Congratulations!'),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Ok'),
+            onPressed: () {
+              Navigator.of(context).pop();
+              quizBrain.reset();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 Future<void> _showMyDialog(BuildContext context) async {
   return showDialog<void>(
     context: context,
@@ -176,6 +207,7 @@ Future<void> _showMyDialog(BuildContext context) async {
             child: Text('Ok'),
             onPressed: () {
               Navigator.of(context).pop();
+              quizBrain.reset();
             },
           ),
         ],

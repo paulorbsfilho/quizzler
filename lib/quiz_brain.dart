@@ -67,13 +67,15 @@ class QuizBrain extends ChangeNotifier{
   }
 
   String getPercent() {
-    double percent;
-    if (_hits < _questionBank.length){
-      percent = (_hits*100) / _questionBank.length;
-    }else{
-      percent = 100.0;
-    }
-    notifyListeners();
+    double percent = (_hits*100) / _questionBank.length;
     return percent.toStringAsFixed(1);
+  }
+
+  bool gotAllTheQuestionsRight() {
+    if (_hits == _questionBank.length-1){
+      return true;
+    }else{
+      return false;
+    }
   }
 }
